@@ -36,3 +36,12 @@
 
 # Docs
 docs/*
+
+# Build files
+**/Makefile*
+
+**/debug/*
+!**/lib/**/debug/*
+
+**/release/*
+!**/lib/**/release/*

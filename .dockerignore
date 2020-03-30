@@ -1,0 +1,17 @@
+.git
+.cache
+
+*.md
+!README*.md
+
+# Build files
+**/Makefile*
+
+**/debug/*
+!**/lib/**/debug/*
+
+**/release/*
+!**/lib/**/release/*
+
+.qmake.stash
+
