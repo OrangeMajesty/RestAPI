@@ -1,53 +1,63 @@
-#include "Server.h"
+#include "server.h"
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTextStream>
 #include <QHostAddress>
 #include <QDateTime>
-#include <iostream>
 
+/**
+ * @brief Server::Server
+ */
 Server::Server()
 {
     serv = new QTcpServer(this);
-//    connect(serv, SIGNAL(newConnection()), this, SLOT(newRequest()));
 
-    connect(serv, &QTcpServer::newConnection, this, &Server::newRequest);
+    // We catch new connections
+    connect(serv, &QTcpServer::newConnection, this, &Server::newConnection);
 
+    // Check server
     if(!serv->listen(QHostAddress::Any, 80))
-    {
-        qDebug() << "error. " << serv->errorString();
-    } else
-    {
-        qDebug() << "success";
-        qDebug() << serv->isListening() << "TCPSocket listen on port";
-    }
-
-//    while (1) {
-
-//    }
-//    std::getchar();
+        throw "Fatal Error: Host Listening Error.";
+    else
+        qDebug() << "Host is listening!";
 }
 
+/**
+ * @brief Server::~Server
+ * @todo Handle graceful shutdown
+ */
 Server::~Server()
 {
 
 }
 
-void Server::newRequest()
+/**
+ * @brief Server::newConnection
+ */
+void Server::newConnection()
 {
-    QTcpSocket* socket = serv->nextPendingConnection();
-    connect(socket, SIGNAL(readyRead()), this, SLOT(newSocket()));
-    qDebug() << "newRequest";
+    // We process everyone who is waiting
+    while (serv->hasPendingConnections())
+    {
+        QTcpSocket* socket = serv->nextPendingConnection();
 
-
+        // We wait until the client is ready to transfer data
+        connect(socket, SIGNAL(readyRead()), this, SLOT(requestResponse()));
+    }
 }
 
-void Server::newSocket()
+/**
+ * @brief Server::requestResponse
+ */
+void Server::requestResponse()
 {
+    // We receive the sender
     QTcpSocket* socket = (QTcpSocket*)sender();
-    QTextStream stream(socket);
-    stream.setAutoDetectUnicode(true);
 
+    // Preparing a text stream for data transfer
+    QTextStream stream(socket);
+
+    // Preparing the answer
     stream << "HTTP/1.0 200 Ok\r\n"
             "Content-Type: text/html; charset=\"utf-8\"\r\n"
             "\r\n"
@@ -56,7 +66,6 @@ void Server::newSocket()
 
     qDebug() << "data " << socket->readAll();
 
-//    socket->write <<
-
+    // Closing the connection
     socket->close();
 }

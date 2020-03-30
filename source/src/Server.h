@@ -4,19 +4,35 @@
 #include <QObject>
 #include <QTcpServer>
 
+/**
+ * @brief The Server class.
+ *      Main class in this the world.
+ *
+ * @details Handles rest requests from the user.
+ */
 class Server : public QObject
 {
     Q_OBJECT
 public:
+
+    /// Constructor. Opens connections, configures handlers
     Server();
+
+    /// Closes the connection
     virtual ~Server();
 
 private:
+
+    /// TCPServer object
      QTcpServer* serv;
 
 public slots:
-    void newRequest();
-    void newSocket();
+
+    /// Handler for a new connection from the client
+    void newConnection();
+
+    /// Client request response handler
+    void requestResponse();
 };
 
 #endif // TODOSERVERAPP_H

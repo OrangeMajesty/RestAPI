@@ -5,7 +5,11 @@ QT += core network
 TARGET = rest
 
 SOURCES += \
-    Server.cpp \
+    server.cpp \
+    rest.cpp \
+
 
 HEADERS += \
-    Server.h \
+    server.h \
+    rest.h \
+
