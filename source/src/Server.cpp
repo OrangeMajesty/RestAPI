@@ -1,4 +1,4 @@
-#include "server.h"
+#include "Server.h"
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTextStream>
