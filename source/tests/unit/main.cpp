@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE UnitTestSuite
 #include <boost/test/included/unit_test.hpp>
 
-#include <rest.h>
+#include <Rest.h>
 
 /**
  * @todo check header on request
