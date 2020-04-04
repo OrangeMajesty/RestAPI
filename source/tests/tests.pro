@@ -1,10 +1,15 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console
 
-QT += core gui network
+QT += core network
 
-SOURCES += \
-    main.cpp
+#isEmpty(BOOST_INCLUDE_DIR): BOOST_INCLUDE_DIR=$$(BOOST_INCLUDE_DIR)
+#!isEmpty(BOOST_INCLUDE_DIR): INCLUDEPATH *= $${BOOST_INCLUDE_DIR}
+
+#isEmpty(BOOST_INCLUDE_DIR): {
+#    #message("BOOST_INCLUDE_DIR is not set, assuming Boost can be found automatically in your system")
+    INCLUDEPATH += lib/boost_1_72_0
+#}
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../src/release/ -lrest
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../src/debug/ -lrest
@@ -18,3 +23,6 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../src/
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../src/release/rest.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../src/debug/rest.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../src/librest.a
+
+SOURCES += \
+    main.cpp

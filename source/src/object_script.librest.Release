@@ -1,0 +1,13 @@
+CREATE release\librest.a
+ADDMOD release\Download.o
+ADDMOD release\Headers.o
+ADDMOD release\Image.o
+ADDMOD release\Rest.o
+ADDMOD release\Server.o
+ADDMOD release\Socket.o
+ADDMOD release\moc_Download.o
+ADDMOD release\moc_Headers.o
+ADDMOD release\moc_Image.o
+ADDMOD release\moc_Rest.o
+ADDMOD release\moc_Server.o
+SAVE

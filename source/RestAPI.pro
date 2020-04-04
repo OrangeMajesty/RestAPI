@@ -1,16 +1,8 @@
 TEMPLATE = subdirs
 
-SUBDIRS +=  \
+SUBDIRS +=  src \
     app \
-    src \
+    tests
 
-linux-g++ | linux-g++-64 | linux-g++-32 {
-    SUBDIRS += tests/unit
-}
-
-win32 {
-    SUBDIRS += tests\unit
-}
-
-app.depends = src
-unit.depends = src
+# build the project sequentially as listed in SUBDIRS !
+CONFIG += ordered

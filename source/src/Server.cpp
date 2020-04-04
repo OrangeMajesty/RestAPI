@@ -1,71 +1,47 @@
+#include "Rest.h"
 #include "Server.h"
-#include <QTcpServer>
-#include <QTcpSocket>
-#include <QTextStream>
-#include <QHostAddress>
-#include <QDateTime>
+#include "Socket.h"
 
 /**
  * @brief Server::Server
  */
-Server::Server()
+Server::Server(QObject *parent) : QTcpServer(parent)
 {
-    serv = new QTcpServer(this);
+    running = true;
 
-    // We catch new connections
-    connect(serv, &QTcpServer::newConnection, this, &Server::newConnection);
+    threadPool = new QThreadPool(this);
+    threadPool->setMaxThreadCount(5);
 
     // Check server
-    if(!serv->listen(QHostAddress::Any, 80))
+    if(!listen(QHostAddress::Any, 80))
         throw "Fatal Error: Host Listening Error.";
     else
         qDebug() << "Host is listening!";
 }
 
 /**
- * @brief Server::~Server
- * @todo Handle graceful shutdown
+ * @brief Server::incomingConnection
+ * @param handle - descriptor
  */
-Server::~Server()
+void Server::incomingConnection(qintptr handle)
 {
-
-}
-
-/**
- * @brief Server::newConnection
- */
-void Server::newConnection()
-{
-    // We process everyone who is waiting
-    while (serv->hasPendingConnections())
+    if(running)
     {
-        QTcpSocket* socket = serv->nextPendingConnection();
-
-        // We wait until the client is ready to transfer data
-        connect(socket, SIGNAL(readyRead()), this, SLOT(requestResponse()));
+        Socket* socket = new Socket(handle);
+        socket->setAutoDelete(true);
+        threadPool->start(socket);
     }
 }
 
 /**
- * @brief Server::requestResponse
+ * @brief Server::shutdown
  */
-void Server::requestResponse()
+void Server::shutdown()
 {
-    // We receive the sender
-    QTcpSocket* socket = (QTcpSocket*)sender();
+    qDebug() << "Server stop";
 
-    // Preparing a text stream for data transfer
-    QTextStream stream(socket);
+    running = false;
 
-    // Preparing the answer
-    stream << "HTTP/1.0 200 Ok\r\n"
-            "Content-Type: text/html; charset=\"utf-8\"\r\n"
-            "\r\n"
-            "<h1>Nothing to see here</h1>\n"
-            << QDateTime::currentDateTime().toString() << "\n";
-
-    qDebug() << "data " << socket->readAll();
-
-    // Closing the connection
-    socket->close();
+    threadPool->waitForDone();
 }
+

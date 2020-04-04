@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpServer>
+#include <QThreadPool>
 
 /**
  * @brief The Server class.
@@ -10,29 +11,24 @@
  *
  * @details Handles rest requests from the user.
  */
-class Server : public QObject
+class Server : public QTcpServer
 {
     Q_OBJECT
 public:
 
-    /// Constructor. Opens connections, configures handlers
-    Server();
+    /// Opens connections, configures ThreadPool
+    explicit Server(QObject *parent = nullptr);
 
-    /// Closes the connection
-    virtual ~Server();
+    /// Connection handler
+    void incomingConnection(qintptr handle) override;
+
+    /// Turns off the server correctly
+    void shutdown();
 
 private:
+    bool running;
 
-    /// TCPServer object
-     QTcpServer* serv;
-
-public slots:
-
-    /// Handler for a new connection from the client
-    void newConnection();
-
-    /// Client request response handler
-    void requestResponse();
+    QThreadPool* threadPool;
 };
 
 #endif // TODOSERVERAPP_H

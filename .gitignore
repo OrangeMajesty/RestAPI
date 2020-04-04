@@ -33,6 +33,11 @@
 
 # Other files
 .qmake.stash
+*.pro.user
+
+# Downloads image
+**/app/images/*
+**/tests/**/images/*
 
 # Docs
 docs/*

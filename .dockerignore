@@ -13,5 +13,8 @@
 **/release/*
 !**/lib/**/release/*
 
+# Downloads image
+**/app/images/*
+
 .qmake.stash
 

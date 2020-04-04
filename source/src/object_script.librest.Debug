@@ -1,0 +1,13 @@
+CREATE debug\librest.a
+ADDMOD debug\Download.o
+ADDMOD debug\Headers.o
+ADDMOD debug\Image.o
+ADDMOD debug\Rest.o
+ADDMOD debug\Server.o
+ADDMOD debug\Socket.o
+ADDMOD debug\moc_Download.o
+ADDMOD debug\moc_Headers.o
+ADDMOD debug\moc_Image.o
+ADDMOD debug\moc_Rest.o
+ADDMOD debug\moc_Server.o
+SAVE
