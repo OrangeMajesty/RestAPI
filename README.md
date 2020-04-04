@@ -5,7 +5,7 @@ QT project implementing the standard RestAPI architecture.
 
 ## Run
 
-    docker compose
+    docker-compose up
 
 ## Request
 
